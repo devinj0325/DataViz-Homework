@@ -1,0 +1,67 @@
+   'create script that loops through 1 yr of stock data for each run and return total volume each stock had over that year
+   'display ticker symbol to coincide with the total stock volume
+   'screenshot each year & upload into github. upload vba code
+   Sub stockloop()
+    For Each ws In Worksheets
+        Dim WorksheetName As String
+        'hold ticker name
+        Dim tickername As String
+        'volume of stock
+        Dim ticker_total As Double
+        ticker_total = 0
+
+        Dim summary_ticker_row As Integer
+        summary_ticker_row = 2
+
+        'table header names - insert yearly & percent change here for moderate version
+        Dim open_price As Double
+        'Set initial open_price. Other opening prices will be determined in the conditional loop.
+        open_price = ws.Cells(2, 3).Value
+        
+        Dim close_price As Double
+        close_price = ws.Cells(2, 6).Value
+        Dim yearly_change As Double
+        Dim percent_change As Double
+        'inserting percent and yearly change as columns
+        ws.Cells(1, 11).Value = "Yearly Change"
+        ws.Cells(1, 12).Value = "Percent Change"
+        
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Total Stock Volume"
+        
+        'calculate yearly change
+        'yearly_change = (close_price - open_price)
+        
+
+        'Count number of rows in column
+        lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+        'loop
+        For i = 2 To lastrow
+        'if then
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+            close_price = ws.Cells(i, 6).Value
+        open_price = ws.Cells(i, 3).Value
+              'Calculate yearly change
+              yearly_change = (close_price - open_price)
+              'print yearly change
+              ws.Range("K" & summary_ticker_row).Value = yearly_change
+                tickername = ws.Cells(i, 1).Value
+                ticker_total = ticker_total + ws.Cells(i, 7).Value
+        'Printing the ticker in the summary column
+                ws.Range("I" & summary_ticker_row).Value = tickername
+                ws.Range("J" & summary_ticker_row).Value = ticker_total
+        'add next row +1
+                summary_ticker_row = summary_ticker_row + 1
+                ticker_total = 0
+            Else
+                'VOLUME - total + value in cells?
+                ticker_total = ticker_total + ws.Cells(i, 7).Value
+            End If
+      
+        Next i
+        
+        'next worksheet
+Next ws
+
+End Sub
